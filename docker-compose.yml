@@ -1,0 +1,55 @@
+version: '3'
+services:
+    nginx-server:
+        container_name: nginx-server-container
+        restart: unless-stopped
+        tty: true
+        build:
+            context: docker
+            dockerfile: nginx.docker
+        volumes:
+            - ./:/app
+        depends_on:
+            - php-fpm
+        ports:
+            - "8080:80"
+            - "8090:443"
+    php-fpm:
+        container_name: php-fpm-container
+        build:
+            context: docker
+            dockerfile: php-fpm.docker
+        environment:
+            XDEBUG_CONFIG: "remote_host=172.17.0.1"
+            # for macOS IP 10.254.254.254
+            DOCKER_HOST: "tcp://localhost:4243"
+            PHP_IDE_CONFIG: "serverName=docker"
+        volumes:
+            - ./:/app
+        depends_on:
+            - mysql
+    mysql:
+        container_name: mysql-container
+        image: mysql:5.7
+        volumes:
+            - ./.data/db:/var/lib/mysql
+        environment:
+            - MYSQL_ROOT_PASSWORD=root
+            - MYSQL_DATABASE=laravel
+        restart: always
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin
+        container_name: 'phpmyadmin'
+        depends_on:
+            - mysql
+        environment:
+            PMA_HOST: mysql
+            PMA_PORT: 3306
+        ports:
+            - '8081:80'
+        volumes:
+            - /sessions
+
+volumes:
+    manager-postgres:
+    composer:
