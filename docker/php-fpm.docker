@@ -28,3 +28,5 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/bin --fil
 RUN pecl install xdebug-2.6.0 && docker-php-ext-enable xdebug
 
 WORKDIR /app
+
+RUN chown -R www-data:www-data /app
