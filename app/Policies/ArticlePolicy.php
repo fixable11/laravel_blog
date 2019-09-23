@@ -26,7 +26,7 @@ class ArticlePolicy
      */
     public function update(User $user, Article $article)
     {
-        return $user->id === $article->user_id;
+        return (int) $user->id === (int) $article->user_id;
     }
 
     /**
@@ -39,6 +39,6 @@ class ArticlePolicy
      */
     public function delete(User $user, Article $article)
     {
-        return $user->id === $article->user_id;
+        return (int) $user->id === (int) $article->user_id;
     }
 }
