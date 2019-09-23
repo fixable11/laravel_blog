@@ -1,6 +1,8 @@
 <?php
 
-use Illuminate\Http\Request;
+declare(strict_types=1);
+
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +15,20 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+Route::group(['prefix' => 'v1'], function ($router) {
+    Route::post('register', 'Auth\RegisterController@register');
+    Route::post('login', 'AuthController@login');
+
+    Route::apiResource('articles', 'ArticleController');
+    Route::apiResource('articles.comments', 'CommentController');
+
+    Route::group(['middleware' => 'auth:api'], function () {
+        Route::post('logout', 'AuthController@logout');
+        Route::post('refresh', 'AuthController@refresh');
+        Route::get('me', 'AuthController@me');
+    });
+});
+
+Route::fallback(function () {
+    return response()->json(['message' => 'Not Found'], 404);
 });
