@@ -49,7 +49,3 @@ services:
             - '8081:80'
         volumes:
             - /sessions
-
-volumes:
-    manager-postgres:
-    composer:

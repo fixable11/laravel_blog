@@ -24,12 +24,15 @@ key-generate:
 bash:
 	docker-compose exec php-fpm bash
 
+#Unit tests
 test:
 	docker-compose exec php-fpm vendor/bin/phpunit --colors=always
 
+#PHPStan - PHP Static Analysis Tool
 stan:
 	docker-compose exec php-fpm php artisan code:analyse
 
+#Code sniffer
 sniff:
 	docker-compose exec php-fpm ./vendor/bin/phpcs --error-severity=1 --warning-severity=8 --colors ./app; \
 	docker-compose exec php-fpm ./vendor/bin/phpcs --error-severity=1 --warning-severity=8 --colors --report=summary ./app; return 0;
